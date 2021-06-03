@@ -32,7 +32,7 @@ public class CredentialController {
             @ModelAttribute("newNote") NoteForm newNote, Model model) {
         String userName = authentication.getName();
         User user = userService.getUser(userName);
-        model.addAttribute("credentials", this.credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute("credentials", this.credentialService.getAllCredentials(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         return "home";
     }
@@ -41,7 +41,7 @@ public class CredentialController {
     public String newCredential(Authentication authentication, @ModelAttribute("newFile") FileForm newFile, @ModelAttribute("newCredential") CredentialForm newCredential, @ModelAttribute("newNote") NoteForm newNote, Model model) {
         String userName = authentication.getName();
         String newUrl = newCredential.getUrl();
-        String credentialIdStr = newCredential.getCredentialid();
+        Integer credentialId = newCredential.getCredentialId();
         String password = newCredential.getPassword();
 
         //Generating salt
@@ -51,14 +51,14 @@ public class CredentialController {
         String encodedKey = Base64.getEncoder().encodeToString(key);
         String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
 
-        if (credentialIdStr.isEmpty()) {
-            credentialService.addCredential(newUrl, userName, newCredential.getUsername(), encodedKey, encryptedPassword);
+        if (credentialId == null) {
+            credentialService.addCredential(newUrl, userName, newCredential.getUserName(), encodedKey, encryptedPassword);
         } else {
-            Credential existingCredential = getCredential(Integer.parseInt(credentialIdStr));
-            credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUsername(), newUrl, encodedKey, encryptedPassword);
+            Credential existingCredential = getCredential(credentialId);
+            credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
         }
         User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("result", "success");
         return "result";
@@ -78,7 +78,7 @@ public class CredentialController {
         credentialService.deleteCredential(credentialId);
         String userName = authentication.getName();
         User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("result", "success");
         return "result";

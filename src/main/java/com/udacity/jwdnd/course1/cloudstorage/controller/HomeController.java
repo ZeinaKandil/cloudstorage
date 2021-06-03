@@ -47,7 +47,7 @@ public class HomeController {
             @ModelAttribute("newNote") NoteForm newNote, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) throws IOException {
         String userName = authentication.getName();
         User user = userService.getUser(userName);
-        Integer userId = user.getUserid();
+        Integer userId = user.getUserId();
         String[] files = fileService.getAllFiles(userId);
         MultipartFile multipartFile = newFile.getFile();
         String fileName = multipartFile.getOriginalFilename();
@@ -81,7 +81,7 @@ public class HomeController {
     )
     public @ResponseBody
     byte[] getFile(@PathVariable String fileName) {
-        return fileService.getFile(fileName).getFiledata();
+        return fileService.getFile(fileName).getFileData();
     }
 
     @GetMapping(value = "/delete-file/{fileName}")
@@ -100,7 +100,7 @@ public class HomeController {
     private Integer getUserID(Authentication authentication) {
         String userName = authentication.getName();
         User user = userService.getUser(userName);
-        return user.getUserid();
+        return user.getUserId();
     }
 
 }

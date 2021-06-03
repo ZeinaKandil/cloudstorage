@@ -27,12 +27,12 @@ public class Credential {
         this.credentialid = credentialid;
     }
 
-    public Integer getUserid() {
+    public Integer getUserId() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userid = userId;
     }
 
     public String getUrl() {
@@ -43,11 +43,11 @@ public class Credential {
         this.url = url;
     }
 
-    public String getUsername() {
+    public String getUserName() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUserName(String username) {
         this.username = username;
     }
 

@@ -16,7 +16,7 @@ public class CredentialService {
     }
 
     public void addCredential(String url, String userName, String credentialUserName, String key, String password) {
-        Integer userId = userMapper.getUser(userName).getUserid();
+        Integer userId = userMapper.getUser(userName).getUserId();
         Credential credential = new Credential(0, url, credentialUserName, key, password, userId);
         credentialMapper.insert(credential);
     }

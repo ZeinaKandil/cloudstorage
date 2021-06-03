@@ -16,35 +16,35 @@ public class Note {
         this.notedescription = notedescription;
     }
 
-    public Integer getNoteid() {
+    public Integer getNoteId() {
         return noteid;
     }
 
-    public void setNoteid(Integer noteid) {
+    public void setNoteId(Integer noteid) {
         this.noteid = noteid;
     }
 
-    public Integer getUserid() {
+    public Integer getUserId() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserId(Integer userid) {
         this.userid = userid;
     }
 
-    public String getNotetitle() {
+    public String getNoteTitle() {
         return notetitle;
     }
 
-    public void setNotetitle(String notetitle) {
+    public void setNoteTitle(String notetitle) {
         this.notetitle = notetitle;
     }
 
-    public String getNotedescription() {
+    public String getNoteDescription() {
         return notedescription;
     }
 
-    public void setNotedescription(String notedescription) {
+    public void setNoteDescription(String notedescription) {
         this.notedescription = notedescription;
     }
 }

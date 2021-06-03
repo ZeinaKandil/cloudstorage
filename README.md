@@ -59,7 +59,7 @@ Your tech lead has done a thorough job developing HTML templates for the require
 
 
 3. Home page
-The home page is the center of the application and hosts the three required pieces of functionality. The existing template presents them as three tabs that can be clicked through by the user:
+The homePage page is the center of the application and hosts the three required pieces of functionality. The existing template presents them as three tabs that can be clicked through by the user:
 
 
  i. Files
@@ -77,14 +77,14 @@ The home page is the center of the application and hosts the three required piec
  - The user should be able to store credentials for specific websites and see a list of the credentials they've previously stored. If you display passwords in this list, make sure they're encrypted!
  - The user should be able to view/edit or delete individual credentials. When the user views the credential, they should be able to see the unencrypted password.
 
-The home page should have a logout button that allows the user to logout of the application and keep their data private.
+The homePage page should have a logout button that allows the user to logout of the application and keep their data private.
 
 ### Testing
 Your tech lead trusts you to do a good job, but testing is important whether you're an excel number-cruncher or a full-stack coding superstar! The QA team at Super*Duper*Drive carries out extensive user testing. Still, your tech lead wants you to write some simple Selenium tests to verify user-facing functionality and prove that your code is feature-complete before the testers get their hands on it.
 
 1. Write tests for user signup, login, and unauthorized access restrictions.
  - Write a test that verifies that an unauthorized user can only access the login and signup pages.
- - Write a test that signs up a new user, logs in, verifies that the home page is accessible, logs out, and verifies that the home page is no longer accessible. 
+ - Write a test that signs up a new user, logs in, verifies that the homePage page is accessible, logs out, and verifies that the homePage page is no longer accessible. 
 
 
 2. Write tests for note creation, viewing, editing, and deletion.

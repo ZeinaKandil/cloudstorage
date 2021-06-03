@@ -31,7 +31,7 @@ public class NoteController {
     private Integer getUserId(Authentication authentication) {
         String userName = authentication.getName();
         User user = userService.getUser(userName);
-        return user.getUserid();
+        return user.getUserId();
     }
 
     @PostMapping("add-note")
@@ -40,14 +40,14 @@ public class NoteController {
             @ModelAttribute("") NoteForm addNote, @ModelAttribute("newCredential") CredentialForm newCredential,
             Model model) {
         String userName = authentication.getName();
-        String newTitle = addNote.getNotetitle();
-        Integer noteId = addNote.getNoteid();
-        String newDescription = addNote.getNotedescription();
-        if (noteId == 0)
+        String newTitle = addNote.getTitle();
+        String noteId = addNote.getNoteId();
+        String newDescription = addNote.getDescription();
+        if (noteId.isEmpty())
             noteService.addNote(newTitle, newDescription, userName);
         else {
-            Note existingNote = getNote(noteId);
-            noteService.updateNote(existingNote.getNoteid(), newTitle, newDescription);
+            Note existingNote = getNote(Integer.parseInt(noteId));
+            noteService.updateNote(existingNote.getNoteId(), newTitle, newDescription);
         }
         Integer userId = getUserId(authentication);
         model.addAttribute("notes", noteService.getAllNotes(userId));

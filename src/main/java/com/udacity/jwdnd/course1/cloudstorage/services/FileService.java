@@ -38,7 +38,7 @@ public class FileService {
         String fileName = multipartFile.getOriginalFilename();
         String contentType = multipartFile.getContentType();
         String fileSize = String.valueOf(multipartFile.getSize());
-        Integer userId = userMapper.getUser(userName).getUserid();
+        Integer userId = userMapper.getUser(userName).getUserId();
         File file = new File(0, fileName, contentType, fileSize, userId, fileData);
         fileMapper.insert(file);
     }
