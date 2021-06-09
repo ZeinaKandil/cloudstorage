@@ -49,12 +49,12 @@ public class NoteController {
         return "result";
     }
 
-    @GetMapping(value = "/get-note/{noteId}")
+    @GetMapping("/get-note/{noteId}")
     public Note getNote(@PathVariable Integer noteId) {
         return noteService.getNote(noteId);
     }
 
-    @GetMapping(value = "/delete-note/{noteId}")
+    @GetMapping("/delete-note/{noteId}")
     public String deleteNote(
             Authentication authentication, @PathVariable Integer noteId, @ModelAttribute("newNote") NoteForm addNote, Model model) {
         noteService.deleteNote(noteId);

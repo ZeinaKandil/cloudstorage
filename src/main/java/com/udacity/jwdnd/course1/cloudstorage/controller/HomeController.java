@@ -29,10 +29,7 @@ public class HomeController {
     }
 
     @GetMapping
-    public String getHomePage(
-            Authentication authentication, @ModelAttribute("newNote") NoteForm Note,
-            @ModelAttribute("newFile") FileForm File, @ModelAttribute("newCredential") CredentialForm newCredential,
-            Model model) {
+    public String getHomePage(Authentication authentication, @ModelAttribute("newNote") NoteForm Note, @ModelAttribute("newFile") FileForm File, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) {
         Integer userId = getUserId(authentication);
         model.addAttribute("notes", noteService.getAllNotes(userId));
         model.addAttribute("files", this.fileService.getAllFiles(userId));
@@ -49,12 +46,11 @@ public class HomeController {
         MultipartFile multipartFile = newFile.getFile();
         String fileName = multipartFile.getOriginalFilename();
         boolean fileExists = false;
-        for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++)
             if(files[i].equals(fileName)){
                 fileExists = true;
                 break;
             }
-        }
         if (!fileExists) {
             try {
                 fileService.addFile(multipartFile, userName);
@@ -70,18 +66,14 @@ public class HomeController {
         return "result";
     }
 
-    @GetMapping(
-            value = "/get-file/{fileName}",
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-    )
+    @GetMapping(value = "/get-file/{fileName}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
     byte[] getFile(@PathVariable String fileName) {
         return fileService.getFile(fileName).getFileData();
     }
 
     @GetMapping("/delete-file/{fileName}")
-    public String deleteFile(
-            Authentication authentication, @PathVariable String fileName, Model model) {
+    public String deleteFile(Authentication authentication, @PathVariable String fileName, Model model) {
         fileService.deleteFile(fileName);
         Integer userId = getUserId(authentication);
         model.addAttribute("files", fileService.getAllFiles(userId));
