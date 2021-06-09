@@ -21,32 +21,26 @@ public class NoteController {
 
     @GetMapping
     public String getHomePage(
-            Authentication authentication, @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("") NoteForm addNote, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) {
+            Authentication authentication, @ModelAttribute("newNote") NoteForm addNote, Model model) {
         Integer userId = getUserId(authentication);
         model.addAttribute("notes", this.noteService.getAllNotes(userId));
         return "home";
     }
 
     private Integer getUserId(Authentication authentication) {
-        String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        return user.getUserId();
+        return userService.getUser(authentication.getName()).getUserId();
     }
 
     @PostMapping("add-note")
-    public String addNote(
-            Authentication authentication, @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("") NoteForm addNote, @ModelAttribute("newCredential") CredentialForm newCredential,
-            Model model) {
+    public String addNote(Authentication authentication, @ModelAttribute("newNote") NoteForm addNote, Model model) {
         String userName = authentication.getName();
         String newTitle = addNote.getTitle();
-        String noteId = addNote.getNoteId();
+        Integer noteId = addNote.getNoteId();
         String newDescription = addNote.getDescription();
-        if (noteId.isEmpty())
+        if (noteId == null)
             noteService.addNote(newTitle, newDescription, userName);
         else {
-            Note existingNote = getNote(Integer.parseInt(noteId));
+            Note existingNote = getNote(noteId);
             noteService.updateNote(existingNote.getNoteId(), newTitle, newDescription);
         }
         Integer userId = getUserId(authentication);
@@ -62,9 +56,7 @@ public class NoteController {
 
     @GetMapping(value = "/delete-note/{noteId}")
     public String deleteNote(
-            Authentication authentication, @PathVariable Integer noteId, @ModelAttribute("") NoteForm addNote,
-            @ModelAttribute("newFile") FileForm newFile, @ModelAttribute("newCredential") CredentialForm newCredential,
-            Model model) {
+            Authentication authentication, @PathVariable Integer noteId, @ModelAttribute("newNote") NoteForm addNote, Model model) {
         noteService.deleteNote(noteId);
         Integer userId = getUserId(authentication);
         model.addAttribute("notes", noteService.getAllNotes(userId));

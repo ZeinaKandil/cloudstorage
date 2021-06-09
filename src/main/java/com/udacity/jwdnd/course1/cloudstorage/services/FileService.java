@@ -24,21 +24,12 @@ public class FileService {
         return fileMapper.getAllFiles(userId);
     }
 
-    public void addFile(MultipartFile multipartFile, String userName) throws IOException {
-        InputStream fis = multipartFile.getInputStream();
-        ByteArrayOutputStream bfs = new ByteArrayOutputStream();
-        byte[] data = new byte[1024];
-        int count;
-        while ((count = fis.read(data, 0, data.length)) != -1) {
-            bfs.write(data, 0, count);
-        }
-        bfs.flush();
-        byte[] fileData = bfs.toByteArray();
-
+    public void addFile(MultipartFile multipartFile, String userName) throws IOException{
         String fileName = multipartFile.getOriginalFilename();
         String contentType = multipartFile.getContentType();
-        String fileSize = String.valueOf(multipartFile.getSize());
+        String fileSize = multipartFile.getSize() + "";
         Integer userId = userMapper.getUser(userName).getUserId();
+        byte[] fileData = multipartFile.getBytes();
         File file = new File(0, fileName, contentType, fileSize, userId, fileData);
         fileMapper.insert(file);
     }

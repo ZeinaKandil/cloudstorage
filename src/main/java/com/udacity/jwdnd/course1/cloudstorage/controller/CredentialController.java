@@ -25,20 +25,20 @@ public class CredentialController {
         this.userService = userService;
     }
 
+    private Integer getUserId(Authentication authentication) {
+        return userService.getUser(authentication.getName()).getUserId();
+    }
+
     @GetMapping
     public String getHomePage(
-            Authentication authentication, @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("newCredential") CredentialForm newCredential,
-            @ModelAttribute("newNote") NoteForm newNote, Model model) {
-        String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", this.credentialService.getAllCredentials(user.getUserId()));
+            Authentication authentication, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) {
+        model.addAttribute("credentials", this.credentialService.getAllCredentials(getUserId(authentication)));
         model.addAttribute("encryptionService", encryptionService);
         return "home";
     }
 
     @PostMapping("add-credential")
-    public String newCredential(Authentication authentication, @ModelAttribute("newFile") FileForm newFile, @ModelAttribute("newCredential") CredentialForm newCredential, @ModelAttribute("newNote") NoteForm newNote, Model model) {
+    public String newCredential(Authentication authentication, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) {
         String userName = authentication.getName();
         String newUrl = newCredential.getUrl();
         Integer credentialId = newCredential.getCredentialId();
@@ -57,29 +57,22 @@ public class CredentialController {
             Credential existingCredential = getCredential(credentialId);
             credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
         }
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserId()));
+        model.addAttribute("credentials", credentialService.getAllCredentials(getUserId(authentication)));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("result", "success");
         return "result";
     }
 
-    @GetMapping(value = "/get-credential/{credentialId}")
+    @GetMapping("/get-credential/{credentialId}")
     public Credential getCredential(@PathVariable Integer credentialId) {
         return credentialService.getCredential(credentialId);
     }
 
-    @GetMapping(value = "/delete-credential/{credentialId}")
-    public String deleteCredential(
-            Authentication authentication, @PathVariable Integer credentialId,
-            @ModelAttribute("newCredential") CredentialForm newCredential,
-            @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("newNote") NoteForm newNote, Model model) {
-        credentialService.deleteCredential(credentialId);
-        String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getAllCredentials(user.getUserId()));
+    @GetMapping("/delete-credential/{credentialId}")
+    public String deleteCredential(Authentication authentication, @PathVariable Integer credentialId, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) {
+        model.addAttribute("credentials", credentialService.getAllCredentials(getUserId(authentication)));
         model.addAttribute("encryptionService", encryptionService);
+        credentialService.deleteCredential(credentialId);
         model.addAttribute("result", "success");
         return "result";
     }

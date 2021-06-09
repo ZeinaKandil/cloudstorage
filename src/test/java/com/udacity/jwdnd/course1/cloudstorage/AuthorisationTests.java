@@ -34,9 +34,6 @@ class AuthorisationTests {
         }
     }
 
-    /**
-     * Write a test that verifies that an unauthorized user can only access the login and signup pages.
-     */
     @Test
     public void testPageAccess() {
         driver.get("http://localhost:" + this.port + "/login");
@@ -49,10 +46,7 @@ class AuthorisationTests {
         Assertions.assertEquals("Login", driver.getTitle());
     }
 
-    /**
-     * Write a test that signs up a new user, logs in, verifies that the home page is accessible, logs out, and verifies
-     * that the home page is no longer accessible.
-     */
+    // Sign up new user, log in to home page and log out and check that the home page is no longer accessible.
     @Test
     public void testSignUpLoginLogout() {
         driver.get("http://localhost:" + this.port + "/signup");
@@ -77,7 +71,6 @@ class AuthorisationTests {
         homePage.logout();
 
         driver.get("http://localhost:" + this.port + "/home");
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         Assertions.assertEquals("Login", driver.getTitle());
     }
 }

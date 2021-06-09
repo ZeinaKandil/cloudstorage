@@ -40,14 +40,19 @@ class CredentialTests extends CloudStorageApplicationTests {
         homePage.navigateCredentialsTab();
         //Create Credential using url, username and password
         homePage.addNewCredential();
-        homePage.setCredentialUrl(url);
-        homePage.setCredentialUsername(username);
-        homePage.setCredentialPassword(password);
-        homePage.saveCredential();
+        enterCredentialData(url, username, password, homePage);
         // Result page displays Success
         ResultPage resultPage = new ResultPage(driver);
         resultPage.clickOk();
     }
+
+    private void enterCredentialData(String url, String username, String password, HomePage homePage) {
+        homePage.setCredentialUrl(url);
+        homePage.setCredentialUsername(username);
+        homePage.setCredentialPassword(password);
+        homePage.saveCredential();
+    }
+
 
     // Check that edit works correctly and that changes are displayed
     @Test
@@ -60,10 +65,7 @@ class CredentialTests extends CloudStorageApplicationTests {
         //Change Credential
         homePage.editCredential();
         String Url2 = User2URL, credentialUsername2 = Username2, password2 = Password2;
-        homePage.setCredentialUrl(Url2);
-        homePage.setCredentialUsername(credentialUsername2);
-        homePage.setCredentialPassword(password2);
-        homePage.saveCredential();
+        enterCredentialData(Url2, Username2, Password2, homePage);
         //Result page displays success and go back to Credentials Tab
         ResultPage resultPage = new ResultPage(driver);
         resultPage.clickOk();

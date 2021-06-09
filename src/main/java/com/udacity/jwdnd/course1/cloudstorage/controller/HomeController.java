@@ -33,7 +33,7 @@ public class HomeController {
             Authentication authentication, @ModelAttribute("newNote") NoteForm Note,
             @ModelAttribute("newFile") FileForm File, @ModelAttribute("newCredential") CredentialForm newCredential,
             Model model) {
-        Integer userId = getUserID(authentication);
+        Integer userId = getUserId(authentication);
         model.addAttribute("notes", noteService.getAllNotes(userId));
         model.addAttribute("files", this.fileService.getAllFiles(userId));
         model.addAttribute("credentials", credentialService.getAllCredentials(userId));
@@ -42,18 +42,15 @@ public class HomeController {
     }
 
     @PostMapping
-    public String newFile(
-            Authentication authentication, @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("newNote") NoteForm newNote, @ModelAttribute("newCredential") CredentialForm newCredential, Model model) throws IOException {
+    public String newFile(Authentication authentication, @ModelAttribute("newFile") FileForm newFile, Model model) {
         String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        Integer userId = user.getUserId();
+        Integer userId = getUserId(authentication);
         String[] files = fileService.getAllFiles(userId);
         MultipartFile multipartFile = newFile.getFile();
         String fileName = multipartFile.getOriginalFilename();
         boolean fileExists = false;
-        for (String f: files) {
-            if (f.equals(fileName)) {
+        for (int i = 0; i < files.length; i++) {
+            if(files[i].equals(fileName)){
                 fileExists = true;
                 break;
             }
@@ -70,7 +67,6 @@ public class HomeController {
             model.addAttribute("message", "This is a duplicate file.");
         }
         model.addAttribute("files", fileService.getAllFiles(userId));
-
         return "result";
     }
 
@@ -83,20 +79,18 @@ public class HomeController {
         return fileService.getFile(fileName).getFileData();
     }
 
-    @GetMapping(value = "/delete-file/{fileName}")
+    @GetMapping("/delete-file/{fileName}")
     public String deleteFile(
-            Authentication authentication, @PathVariable String fileName, @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("newNote") NoteForm newNote, @ModelAttribute("newCredential") CredentialForm newCredential,
-            Model model) {
+            Authentication authentication, @PathVariable String fileName, Model model) {
         fileService.deleteFile(fileName);
-        Integer userId = getUserID(authentication);
+        Integer userId = getUserId(authentication);
         model.addAttribute("files", fileService.getAllFiles(userId));
         model.addAttribute("result", "success");
 
         return "result";
     }
 
-    private Integer getUserID(Authentication authentication) {
+    private Integer getUserId(Authentication authentication) {
         return userService.getUser(authentication.getName()).getUserId();
     }
 
