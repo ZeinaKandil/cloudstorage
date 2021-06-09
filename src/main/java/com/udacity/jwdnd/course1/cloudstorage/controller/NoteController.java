@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Controller
 @RequestMapping("note")
 public class NoteController {
@@ -37,15 +39,36 @@ public class NoteController {
         String newTitle = addNote.getTitle();
         Integer noteId = addNote.getNoteId();
         String newDescription = addNote.getDescription();
-        if (noteId == null)
-            noteService.addNote(newTitle, newDescription, userName);
-        else {
-            Note existingNote = getNote(noteId);
-            noteService.updateNote(existingNote.getNoteId(), newTitle, newDescription);
+        Note [] notes = noteService.getAllNotes(getUserId(authentication));
+        boolean noteExists = false;
+        for (int i = 0; i < notes.length; i++) {
+            if (notes[i].getNoteTitle().equals(newTitle)) {
+                noteExists = true;
+                break;
+            }
+        }
+        if (!noteExists) {
+            if(newTitle.length() > 20){
+                model.addAttribute("result", "error");
+                model.addAttribute("message", "Note Title cannot exceed 20 characters.");
+            }else if(newDescription.length() > 1000){
+                model.addAttribute("result", "error");
+                model.addAttribute("message", "Note Description cannot exceed 1000 characters.");
+            }else {
+                if (noteId == null)
+                    noteService.addNote(newTitle, newDescription, userName);
+                else {
+                    Note existingNote = getNote(noteId);
+                    noteService.updateNote(existingNote.getNoteId(), newTitle, newDescription);
+                }
+                model.addAttribute("result", "success");
+            }
+        } else {
+            model.addAttribute("result", "error");
+            model.addAttribute("message", "There is a note with the same title.");
         }
         Integer userId = getUserId(authentication);
         model.addAttribute("notes", noteService.getAllNotes(userId));
-        model.addAttribute("result", "success");
         return "result";
     }
 

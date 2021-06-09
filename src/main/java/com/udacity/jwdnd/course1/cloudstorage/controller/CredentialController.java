@@ -51,15 +51,39 @@ public class CredentialController {
         String encodedKey = Base64.getEncoder().encodeToString(key);
         String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
 
-        if (credentialId == null) {
-            credentialService.addCredential(newUrl, userName, newCredential.getUserName(), encodedKey, encryptedPassword);
+        Credential [] credentials = credentialService.getAllCredentials(getUserId(authentication));
+        boolean credentialExists = false;
+        for (int i = 0; i < credentials.length; i++) {
+            if (credentials[i].getUserName().equals(userName)) {
+                credentialExists = true;
+                break;
+            }
+        }
+        if (!credentialExists) {
+            if(newUrl.length() > 100){
+                model.addAttribute("result", "error");
+                model.addAttribute("message", "Credential Url cannot exceed 100 characters.");
+            }else if(userName.length() > 30){
+                model.addAttribute("result", "error");
+                model.addAttribute("message", "Credential Username cannot exceed 30 characters.");
+            }else if(password.length() > 30){
+                model.addAttribute("result", "error");
+                model.addAttribute("message", "Credential password cannot exceed 30 characters.");
+            }else {
+                if (credentialId == null) {
+                    credentialService.addCredential(newUrl, userName, newCredential.getUserName(), encodedKey, encryptedPassword);
+                } else {
+                    Credential existingCredential = getCredential(credentialId);
+                    credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
+                }
+                model.addAttribute("result", "success");
+            }
         } else {
-            Credential existingCredential = getCredential(credentialId);
-            credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
+            model.addAttribute("result", "error");
+            model.addAttribute("message", "There is a Credential with the same username.");
         }
         model.addAttribute("credentials", credentialService.getAllCredentials(getUserId(authentication)));
         model.addAttribute("encryptionService", encryptionService);
-        model.addAttribute("result", "success");
         return "result";
     }
 

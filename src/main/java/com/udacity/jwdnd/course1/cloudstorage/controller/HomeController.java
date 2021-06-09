@@ -40,6 +40,11 @@ public class HomeController {
 
     @PostMapping
     public String newFile(Authentication authentication, @ModelAttribute("newFile") FileForm newFile, Model model) {
+        if(newFile.getFile().isEmpty()){
+            model.addAttribute("result", "error");
+            model.addAttribute("message", "There is nothing to upload! Please choose a file to upload");
+            return "result";
+        }
         String userName = authentication.getName();
         Integer userId = getUserId(authentication);
         String[] files = fileService.getAllFiles(userId);
