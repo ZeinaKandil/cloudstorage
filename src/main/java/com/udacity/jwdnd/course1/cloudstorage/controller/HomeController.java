@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-
+//And FileController
 @Controller
 @RequestMapping("/home")
 public class HomeController {
@@ -55,7 +55,6 @@ public class HomeController {
         for (String f: files) {
             if (f.equals(fileName)) {
                 fileExists = true;
-
                 break;
             }
         }
@@ -68,7 +67,7 @@ public class HomeController {
             model.addAttribute("result", "success");
         } else {
             model.addAttribute("result", "error");
-            model.addAttribute("message", "You have tried to add a duplicate file.");
+            model.addAttribute("message", "This is a duplicate file.");
         }
         model.addAttribute("files", fileService.getAllFiles(userId));
 
@@ -98,9 +97,7 @@ public class HomeController {
     }
 
     private Integer getUserID(Authentication authentication) {
-        String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        return user.getUserId();
+        return userService.getUser(authentication.getName()).getUserId();
     }
 
 }
